@@ -1,0 +1,3 @@
+/*  Next.js handles all routing — Netlify must not intercept any paths
+    This ensures refresh on deep routes like /dashboard/customer/orders works */
+/*    200

@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+enum Role {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+enum OrderStatus {
+  NOT_STARTED
+  STARTED
+  IN_PROCESS
+  COMPLETED
+  OUT_FOR_DELIVERY
+  DELIVERED
+}
+
+enum QuoteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+
+  vendor        Vendor?
+  designFiles   DesignFile[]
+  quoteRequests QuoteRequest[]
+  orders        Order[]        @relation("CustomerOrders")
+  cartItems     CartItem[]
+
+  @@map("users")
+}
+
+model Vendor {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  companyName String
+  rating      Float    @default(0)
+  location    String?
+  bio         String?
+  createdAt   DateTime @default(now())
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quoteRequests QuoteRequest[]
+  quotes        Quote[]
+  orders        Order[]        @relation("VendorOrders")
+  products      Product[]
+
+  @@map("vendors")
+}
+
+model DesignFile {
+  id                 String   @id @default(cuid())
+  userId             String
+  fileName           String
+  fileUrl            String
+  fileType           String
+  fileSizeBytes      Int?
+  volume             Float?
+  estimatedPrintTime Float?
+  createdAt          DateTime @default(now())
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quoteRequests QuoteRequest[]
+
+  @@map("design_files")
+}
+
+model QuoteRequest {
+  id             String   @id @default(cuid())
+  designId       String
+  customerId     String
+  vendorId       String
+  material       String
+  infillDensity  Int
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  design   DesignFile @relation(fields: [designId], references: [id], onDelete: Cascade)
+  customer User       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  vendor   Vendor     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  quote    Quote?
+
+  @@map("quote_requests")
+}
+
+model Quote {
+  id           String      @id @default(cuid())
+  requestId    String      @unique
+  vendorId     String
+  materialCost Float
+  machineCost  Float
+  laborCost    Float
+  gst          Float
+  platformFee  Float
+  totalPrice   Float
+  status       QuoteStatus @default(PENDING)
+  notes        String?
+  createdAt    DateTime    @default(now())
+
+  request QuoteRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  vendor  Vendor       @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  order   Order?
+
+  @@map("quotes")
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  customerId    String
+  vendorId      String
+  quoteId       String?     @unique
+  status        OrderStatus @default(NOT_STARTED)
+  depositAmount Float       @default(0)
+  finalAmount   Float
+  createdAt     DateTime    @default(now())
+
+  customer       User       @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
+  vendor         Vendor     @relation("VendorOrders", fields: [vendorId], references: [id], onDelete: Cascade)
+  quote          Quote?     @relation(fields: [quoteId], references: [id])
+  trackingEvents OrderTracking[]
+
+  @@map("orders")
+}
+
+model OrderTracking {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  note      String?
+  updatedAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_tracking")
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  vendorId    String
+  name        String
+  description String?
+  price       Float
+  stock       Int           @default(0)
+  imageUrl    String?
+  category    String?
+  status      ProductStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+
+  vendor    Vendor     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  cartItems CartItem[]
+
+  @@map("products")
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
