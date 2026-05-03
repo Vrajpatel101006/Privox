@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./frontend/public/landing/hero_main.jpeg" alt="Prinvox Banner" width="100%" style="border-radius: 12px;" />
+  <img src="./frontend/public/landing/hero_illustration.jfif" alt="Prinvox Banner" width="100%" style="border-radius: 12px;" />
   <br/>
   <h1>Prinvox</h1>
   <p><b>A Real-Time, Multi-Vendor 3D Printing Marketplace & Order Management System</b></p>
