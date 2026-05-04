@@ -30,7 +30,7 @@ const REFUND_TYPES = [
     key: 'FULL_RETURN',
     label: '↩️ Full Return',
     desc: 'I want to return the item and get a refund.',
-    resolution: 'You send the item back. Receive 85% of the order amount. (5% platform handling + 10% vendor return fee deducted.)',
+    resolution: 'You send the item back. Receive 80% of the order amount. (8% platform handling + 12% vendor labor fee deducted.)',
     color: 'from-purple-600/20 to-purple-800/10 border-purple-500/30',
   },
 ];

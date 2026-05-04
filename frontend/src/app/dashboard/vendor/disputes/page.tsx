@@ -199,16 +199,26 @@ export default function VendorDisputesPage() {
                           )}
                         </div>
 
-                        {/* FULL_RETURN breakdown */}
-                        {refund.type === 'FULL_RETURN' && (
-                          <div className="bg-purple-900/20 border border-purple-500/20 rounded-xl p-3 text-xs space-y-1">
-                            <p className="text-purple-300 font-semibold">↩️ Full Return Breakdown</p>
-                            <p className="text-slate-400">Order Total: <span className="text-white">₹{refund.orderAmount}</span></p>
-                            <p className="text-slate-400">Customer Refund (85%): <span className="text-white">₹{refund.refundAmount}</span></p>
-                            <p className="text-slate-400">Your Share (10% return fee): <span className="text-green-400">₹{refund.vendorReturnFee}</span></p>
-                            <p className="text-slate-400">Platform Share (5%): <span className="text-slate-300">₹{refund.platformFeeOnReturn}</span></p>
+                        {/* Financial Breakdown */}
+                        <div className="bg-purple-900/20 border border-purple-500/20 rounded-xl p-3 text-xs space-y-1">
+                          <p className="text-purple-300 font-semibold mb-1">💰 Financial Split (Balanced Policy)</p>
+                          <div className="grid grid-cols-2 gap-y-1">
+                            <p className="text-slate-400">Order Total:</p>
+                            <p className="text-white text-right font-bold">₹{refund.orderAmount}</p>
+                            
+                            <p className="text-slate-400">Customer Refund (80%):</p>
+                            <p className="text-white text-right">₹{refund.customerRefund}</p>
+                            
+                            <p className="text-slate-400">Your Share (12%):</p>
+                            <p className="text-green-400 text-right font-bold">₹{refund.vendorShare}</p>
+                            
+                            <p className="text-slate-400">Platform Fee (8%):</p>
+                            <p className="text-slate-300 text-right">₹{refund.platformShare}</p>
                           </div>
-                        )}
+                          <p className="text-[10px] text-slate-500 mt-2 border-t border-white/5 pt-1 italic">
+                            * Note: 20% total deduction helps cover production, labor, and platform handling.
+                          </p>
+                        </div>
 
                         {/* Action Area */}
                         {refund.status === 'PENDING' && (

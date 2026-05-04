@@ -261,6 +261,18 @@ export default function CustomerOrdersPage() {
                       {refunds[order.id].type === 'FULL_RETURN' ? 'Return' : 'Refund'} Status: {refunds[order.id].status.replace('_', ' ')}
                     </p>
                     
+                    {/* Financial Breakdown for Customer */}
+                    <div className="mt-2 text-[10px] space-y-1 text-slate-400 border-t border-purple-500/10 pt-2">
+                      <div className="flex justify-between">
+                        <span>Original Order Total:</span>
+                        <span className="text-white">₹{refunds[order.id].orderAmount}</span>
+                      </div>
+                      <div className="flex justify-between font-bold text-green-400">
+                        <span>Your Refund (80%):</span>
+                        <span>₹{refunds[order.id].customerRefund}</span>
+                      </div>
+                    </div>
+
                     {refunds[order.id].status === 'REPLACEMENT_SHIPPED' && (
                       <div className="mt-2">
                         <p className="text-sm text-slate-300">
