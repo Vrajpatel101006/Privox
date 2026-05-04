@@ -121,7 +121,6 @@ export default function HomePage() {
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-1000"
                 priority
-                unoptimized={true}
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0a0f]/60 via-transparent to-transparent" />
               

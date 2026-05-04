@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   // ── Image Optimization ──────────────────────────────────────────────────────
   images: {
     // Enable Next.js built-in image optimization (WebP conversion, lazy loading)
-    unoptimized: false,
+    unoptimized: true,
     dangerouslyAllowSVG: true,
     dangerouslyAllowLocalIP: true,
     formats: ['image/webp', 'image/avif'],
