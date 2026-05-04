@@ -5,12 +5,17 @@ const nextConfig: NextConfig = {
   images: {
     // Enable Next.js built-in image optimization (WebP conversion, lazy loading)
     unoptimized: false,
+    dangerouslyAllowSVG: true,
+    dangerouslyAllowLocalIP: true,
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 86400, // 24h cache for optimized images
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
-      { protocol: 'http', hostname: 'localhost' },
-      { protocol: 'http', hostname: '127.0.0.1' },
+      // Backend API on localhost:5000 — port must be explicit for Next.js Image to allow it
+      { protocol: 'http', hostname: 'localhost', port: '5000' },
+      { protocol: 'http', hostname: '127.0.0.1', port: '5000' },
+      // Frontend dev server (port 3000) — for any local assets served there
+      { protocol: 'http', hostname: 'localhost', port: '3000' },
     ],
   },
 

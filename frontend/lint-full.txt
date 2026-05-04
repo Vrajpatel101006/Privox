@@ -1,0 +1,304 @@
+﻿
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\about\page.tsx
+   6:44  warning  'Heart' is defined but never used                                @typescript-eslint/no-unused-vars
+   6:51  warning  'Rocket' is defined but never used                               @typescript-eslint/no-unused-vars
+  89:69  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\admin\disputes\page.tsx
+   29:44  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+   30:38  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+   72:6   warning  React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+  101:6   warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  115:19  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+  122:9   warning  'logout' is assigned a value but never used                                                                  @typescript-eslint/no-unused-vars
+  236:88  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                              react/no-unescaped-entities
+  263:88  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                              react/no-unescaped-entities
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\admin\layout.tsx
+   5:25  warning  'BarChart3' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  24:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\admin\layout.tsx:24:7
+  22 |       router.replace('/admin');
+  23 |     } else {
+> 24 |       setAdminEmail(email || 'Admin');
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  25 |     }
+  26 |   }, [router]);
+  27 |  react-hooks/set-state-in-effect
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\admin\page.tsx
+  25:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\cart\page.tsx
+   15:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   66:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   86:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   92:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   98:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  162:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\customer\layout.tsx
+  28:6   warning  React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  58:61  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  65:68  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\customer\orders\page.tsx
+   10:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   33:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   34:57  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   46:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   60:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   62:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   74:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  106:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  121:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  244:81  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  284:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  285:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\customer\profile\page.tsx
+  47:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  86:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\customer\quotes\page.tsx
+   16:40  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   26:20  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   37:44  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   51:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   54:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   66:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   75:20  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   78:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   91:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  130:31  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  172:67  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  172:81  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\customer\refund\[orderId]\page.tsx
+   43:38  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   56:20  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   80:21  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   83:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  103:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  200:55  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\customer\upload\page.tsx
+   20:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   25:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   26:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   27:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   59:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  106:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  142:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  177:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  375:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  390:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  402:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  434:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  465:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\disputes\page.tsx
+   29:42  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+   40:9   warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   44:20  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+   98:19  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  115:19  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\earnings\page.tsx
+    4:10  warning  'paymentApi' is defined but never used    @typescript-eslint/no-unused-vars
+  161:31  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:31  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\inventory\page.tsx
+    9:44  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   30:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   43:20  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   62:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   75:18  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   79:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   86:32  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  107:71  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  207:29  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\layout.tsx
+  31:6   warning  React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  60:61  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  67:68  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\orders\page.tsx
+   30:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   39:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   54:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   75:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   90:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\profile\page.tsx
+   10:3   warning  'User' is defined but never used          @typescript-eslint/no-unused-vars
+   13:3   warning  'ShieldCheck' is defined but never used   @typescript-eslint/no-unused-vars
+   15:3   warning  'Trash2' is defined but never used        @typescript-eslint/no-unused-vars
+   70:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   82:30  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\dashboard\vendor\quotes\page.tsx
+   17:44  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   21:58  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   23:42  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   30:20  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   42:43  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   56:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   59:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   94:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  127:33  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  185:86  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  185:98  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  247:41  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\login\page.tsx
+  22:6   warning  React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  29:18  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  32:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  47:18  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  50:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\marketplace\page.tsx
+   18:44  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+   33:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+   38:25  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+   40:38  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+   60:6   warning  React Hook useEffect has a missing dependency: 'search'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   88:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  100:25  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  101:48  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  117:25  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  118:48  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  125:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  159:69  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                            react/no-unescaped-entities
+  218:51  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  238:32  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  241:42  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  293:22  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                            react/no-unescaped-entities
+  293:31  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                            react/no-unescaped-entities
+  341:50  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\page.tsx
+   14:3   warning  'BarChart3' is defined but never used                            @typescript-eslint/no-unused-vars
+   87:20  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  189:64  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  289:29  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\register\page.tsx
+  28:6   warning  React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  41:18  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  44:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  59:18  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+  66:19  error    Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\app\vendors\[id]\page.tsx
+   35:40  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+   46:20  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+   51:32  warning  React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   59:21  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+   64:19  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+   79:9   warning  'fullStars' is assigned a value but never used                                                           @typescript-eslint/no-unused-vars
+  143:45  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\context\AuthContext.tsx
+  32:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\context\AuthContext.tsx:32:7
+  30 |     const storedUser = localStorage.getItem('user');
+  31 |     if (storedToken && storedUser) {
+> 32 |       setToken(storedToken);
+     |       ^^^^^^^^ Avoid calling setState() directly within an effect
+  33 |       setUser(JSON.parse(storedUser));
+  34 |     }
+  35 |     setLoading(false);  react-hooks/set-state-in-effect
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\context\SocketContext.tsx
+   51:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\context\SocketContext.tsx:51:7
+  49 |       });
+  50 |       socketRef.current = s;
+> 51 |       setSocket(s);
+     |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  52 |     }
+  53 |
+  54 |     return () => {  react-hooks/set-state-in-effect
+   89:29  warning  '_data' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   89:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+   98:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  107:31  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  116:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  126:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  135:37  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  150:41  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  158:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\hooks\usePincode.ts
+  23:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\hooks\usePincode.ts:23:7
+  21 |     // Only fetch if exactly 6 digits
+  22 |     if (!/^\d{6}$/.test(pincode)) {
+> 23 |       setData({ city: '', state: '', loading: false, error: null, isValid: false });
+     |       ^^^^^^^ Avoid calling setState() directly within an effect
+  24 |       return;
+  25 |     }
+  26 |  react-hooks/set-state-in-effect
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\lib\api.ts
+  44:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\Desktop\Prinvox\frontend\src\lib\pincode-validator.ts
+  158:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  161:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 185 problems (165 errors, 20 warnings)
+
