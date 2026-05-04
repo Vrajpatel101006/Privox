@@ -18,9 +18,9 @@ export const PRODUCT_CATEGORIES = [
   { id: 'Fashion Wearables',               emoji: '👗', color: 'from-fuchsia-500/20 to-pink-500/5', icon: 'Shirt', image: '/categories/fashion.png' },
   { id: 'Musical Instruments',              emoji: '🎸', color: 'from-indigo-500/20 to-blue-500/5', icon: 'Music', image: '/categories/musical.png' },
   { id: 'Educational Models',              emoji: '🔬', color: 'from-cyan-500/20 to-blue-500/5', icon: 'Microscope', image: '/categories/educational.png' },
-  { id: 'Lithophanes',                      emoji: '🖼️', color: 'from-neutral-500/20 to-transparent', icon: 'Image', image: '/categories/LithophaneVase.jfif' },
-  { id: 'Automotive Parts',                emoji: '🚗', color: 'from-red-600/20 to-red-900/5', icon: 'Car', image: '/categories/AutomotiveParts.jfif' },
-  { id: 'Stationery',                       emoji: '✏️', color: 'from-yellow-500/20 to-orange-500/5', icon: 'PenTool', image: '/categories/Stationary.jfif' },
+  { id: 'Lithophanes',                      emoji: '🖼️', color: 'from-neutral-500/20 to-transparent', icon: 'Image', image: '/categories/LithophaneVase.jpg' },
+  { id: 'Automotive Parts',                emoji: '🚗', color: 'from-red-600/20 to-red-900/5', icon: 'Car', image: '/categories/AutomotiveParts.jpg' },
+  { id: 'Stationery',                       emoji: '✏️', color: 'from-yellow-500/20 to-orange-500/5', icon: 'PenTool', image: '/categories/Stationary.jpg' },
 ] as const;
 
 export type ProductCategory = typeof PRODUCT_CATEGORIES[number]['id'];

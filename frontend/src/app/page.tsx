@@ -23,25 +23,25 @@ const workflowSteps = [
   {
     title: "Secure Design Upload",
     desc: "Your intellectual property is safe. Upload STL/OBJ files with instant 3D validation.",
-    image: "/landing/step_design.jfif",
+    image: "/landing/step_design.jpg",
     icon: <Printer className="w-6 h-6 text-violet-400" />
   },
   {
     title: "Competitive Bidding",
     desc: "Send your design to a network of verified local vendors. Compare price and quality.",
-    image: "/landing/step_bid.jfif",
+    image: "/landing/step_bid.jpg",
     icon: <Layers className="w-6 h-6 text-cyan-400" />
   },
   {
     title: "Live Production Tracking",
     desc: "Monitor your print's progress in real-time with live status updates from the workshop.",
-    image: "/landing/step_build.jfif",
+    image: "/landing/step_build.jpg",
     icon: <Cpu className="w-6 h-6 text-emerald-400" />
   },
   {
     title: "Verified Delivery",
     desc: "Receive your custom parts, quality checked and delivered to your doorstep.",
-    image: "/landing/step_delivery.jfif",
+    image: "/landing/step_delivery.jpg",
     icon: <Package className="w-6 h-6 text-amber-400" />
   }
 ];
@@ -116,7 +116,7 @@ export default function HomePage() {
           >
             <div className="relative aspect-video lg:aspect-square rounded-[40px] overflow-hidden border border-white/10 shadow-2xl group">
               <Image 
-                src="/landing/hero_main.jfif" 
+                src="/landing/hero_main.jpg" 
                 alt="3D Printing Hero" 
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-1000"
@@ -275,7 +275,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="relative rounded-[32px] md:rounded-[48px] overflow-hidden border border-white/10 bg-[#12121a] group">
             <div className="absolute inset-0 opacity-40 group-hover:opacity-50 transition-opacity">
-              <Image src="/landing/vendor_hero2.jfif" alt="Vendor Dashboard" fill className="object-cover" />
+              <Image src="/landing/vendor_hero2.jpg" alt="Vendor Dashboard" fill className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-[#12121a] via-[#12121a]/80 to-transparent" />
             </div>
             
