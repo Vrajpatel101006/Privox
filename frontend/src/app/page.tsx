@@ -121,6 +121,7 @@ export default function HomePage() {
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-1000"
                 priority
+                unoptimized={true}
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0a0f]/60 via-transparent to-transparent" />
               
@@ -201,7 +202,7 @@ export default function HomePage() {
                 className="group relative"
               >
                 <div className="relative aspect-square rounded-[32px] overflow-hidden mb-8 border border-white/10 group-hover:border-violet-500/50 transition-colors">
-                  <Image src={step.image} alt={step.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src={step.image} alt={step.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" unoptimized={true} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center mb-4">
@@ -257,6 +258,7 @@ export default function HomePage() {
                     alt={cat.id} 
                     fill 
                     className="object-cover opacity-40 group-hover:opacity-70 transition-all duration-700 group-hover:scale-110" 
+                    unoptimized={true}
                   />
                   <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} mix-blend-overlay`} />
                   <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
@@ -275,7 +277,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="relative rounded-[32px] md:rounded-[48px] overflow-hidden border border-white/10 bg-[#12121a] group">
             <div className="absolute inset-0 opacity-40 group-hover:opacity-50 transition-opacity">
-              <Image src="/landing/vendor_hero2.jpg" alt="Vendor Dashboard" fill className="object-cover" />
+              <Image src="/landing/vendor_hero2.jpg" alt="Vendor Dashboard" fill className="object-cover" unoptimized={true} />
               <div className="absolute inset-0 bg-gradient-to-r from-[#12121a] via-[#12121a]/80 to-transparent" />
             </div>
             
