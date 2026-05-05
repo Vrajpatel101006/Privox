@@ -1,31 +1,15 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { auth, requireRole } = require('../middleware/auth');
-const { db } = require('../lib/firebase');
+const { db, storage } = require('../lib/firebase');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 
 const router = express.Router();
 
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'product-' + uniqueSuffix + path.extname(file.originalname).toLowerCase());
-  }
-});
-
 const upload = multer({
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -41,9 +25,26 @@ const upload = multer({
 router.post('/upload-image', auth, requireRole('VENDOR'), upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No payload detected.' });
   try {
-    const publicUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/uploads/${req.file.filename}`;
+    const bucket = storage.bucket();
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const filename = `products/product-${uniqueSuffix}${path.extname(req.file.originalname).toLowerCase()}`;
+    const file = bucket.file(filename);
+
+    await file.save(req.file.buffer, {
+      metadata: { contentType: req.file.mimetype },
+    });
+    
+    try {
+      await file.makePublic();
+    } catch (e) {
+      // Ignore if bucket doesn't support makePublic
+    }
+
+    // Use Firebase Storage public URL format
+    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
     res.json({ imageUrl: publicUrl });
   } catch (err) {
+    console.error('Upload error:', err);
     res.status(500).json({ error: 'System failed to cache binary image frame.' });
   }
 });

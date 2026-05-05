@@ -12,19 +12,10 @@ const router = express.Router();
 // ──────────────────────────────────────────────────────────────
 // Video/Photo Upload Setup
 // ──────────────────────────────────────────────────────────────
-const uploadDir = path.join(__dirname, '../../uploads/refunds');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `refund-${suffix}${path.extname(file.originalname).toLowerCase()}`);
-  },
-});
+const { storage } = require('../lib/firebase');
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 200 * 1024 * 1024 }, // 200MB for videos
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -201,6 +192,27 @@ router.post('/request',
   }
 );
 
+// Helper to upload a file buffer to Firebase Storage
+async function uploadToFirebase(fileBuffer, mimetype, originalName) {
+  const bucket = storage.bucket();
+  const ext = path.extname(originalName).toLowerCase();
+  const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+  const filename = `refunds/refund-${suffix}${ext}`;
+  const file = bucket.file(filename);
+
+  await file.save(fileBuffer, {
+    metadata: { contentType: mimetype || 'application/octet-stream' },
+  });
+
+  try {
+    await file.makePublic();
+  } catch (e) {
+    // Ignore if uniform bucket access prevents makePublic
+  }
+
+  return `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+}
+
 // ──────────────────────────────────────────────────────────────
 // POST /refunds/:id/upload-proof — Upload photo/video proof (customer)
 // ──────────────────────────────────────────────────────────────
@@ -219,11 +231,20 @@ router.post('/:id/upload-proof', auth, requireRole('CUSTOMER'),
       }
 
       const updates = { updatedAt: new Date().toISOString() };
+      
       if (req.files?.photo?.[0]) {
-        updates.customerPhotoUrl = `${BACKEND_URL}/uploads/refunds/${req.files.photo[0].filename}`;
+        updates.customerPhotoUrl = await uploadToFirebase(
+          req.files.photo[0].buffer, 
+          req.files.photo[0].mimetype, 
+          req.files.photo[0].originalname
+        );
       }
       if (req.files?.video?.[0]) {
-        updates.customerVideoUrl = `${BACKEND_URL}/uploads/refunds/${req.files.video[0].filename}`;
+        updates.customerVideoUrl = await uploadToFirebase(
+          req.files.video[0].buffer, 
+          req.files.video[0].mimetype, 
+          req.files.video[0].originalname
+        );
       }
 
       await refundRef.update(updates);
@@ -322,10 +343,18 @@ router.post('/:id/vendor-upload-proof', auth, requireRole('VENDOR'),
       const updates = { updatedAt: new Date().toISOString() };
       
       if (req.files.video?.[0]) {
-        updates.vendorPackingVideoUrl = `${BACKEND_URL}/uploads/refunds/${req.files.video[0].filename}`;
+        updates.vendorPackingVideoUrl = await uploadToFirebase(
+          req.files.video[0].buffer, 
+          req.files.video[0].mimetype, 
+          req.files.video[0].originalname
+        );
       }
       if (req.files.photo?.[0]) {
-        updates.vendorDisputePhotoUrl = `${BACKEND_URL}/uploads/refunds/${req.files.photo[0].filename}`;
+        updates.vendorDisputePhotoUrl = await uploadToFirebase(
+          req.files.photo[0].buffer, 
+          req.files.photo[0].mimetype, 
+          req.files.photo[0].originalname
+        );
       }
 
       await refundRef.update(updates);

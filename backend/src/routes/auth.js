@@ -295,20 +295,10 @@ router.put('/profile', require('../middleware/auth').auth, async (req, res) => {
 // POST /auth/upload-avatar — Upload user profile photo
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { storage } = require('../lib/firebase');
 
-const avatarUploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(avatarUploadDir)) fs.mkdirSync(avatarUploadDir, { recursive: true });
-
-const avatarStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, avatarUploadDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `avatar-${req.user?.id || Date.now()}-${Date.now()}${ext}`);
-  }
-});
 const avatarUpload = multer({
-  storage: avatarStorage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -320,10 +310,27 @@ const avatarUpload = multer({
 router.post('/upload-avatar', require('../middleware/auth').auth, avatarUpload.single('avatar'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const avatarUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/uploads/${req.file.filename}`;
+    const bucket = storage.bucket();
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const filename = `avatars/avatar-${req.user?.id || Date.now()}-${Date.now()}${ext}`;
+    const file = bucket.file(filename);
+
+    await file.save(req.file.buffer, {
+      metadata: { contentType: req.file.mimetype },
+    });
+    
+    try {
+      await file.makePublic();
+    } catch (e) {
+      // Ignore if bucket doesn't support makePublic
+    }
+
+    const avatarUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+    
     await db.collection('users').doc(req.user.id).update({ avatarUrl, updatedAt: new Date().toISOString() });
     res.json({ avatarUrl });
   } catch (err) {
+    console.error('Avatar upload error:', err);
     res.status(500).json({ error: 'Avatar upload failed' });
   }
 });

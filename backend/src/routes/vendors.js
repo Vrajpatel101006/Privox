@@ -178,20 +178,10 @@ router.post('/:id/rate', auth, requireRole('CUSTOMER'), async (req, res) => {
 // POST /vendors/upload-logo — Upload vendor company logo/photo
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { storage } = require('../lib/firebase');
 
-const logoDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(logoDir)) fs.mkdirSync(logoDir, { recursive: true });
-
-const logoStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, logoDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `logo-${req.user?.id || Date.now()}-${Date.now()}${ext}`);
-  }
-});
 const logoUpload = multer({
-  storage: logoStorage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -203,7 +193,23 @@ const logoUpload = multer({
 router.post('/upload-logo', auth, requireRole('VENDOR'), logoUpload.single('logo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const logoUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/uploads/${req.file.filename}`;
+    const bucket = storage.bucket();
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const filename = `vendors/logo-${req.user?.id || Date.now()}-${Date.now()}${ext}`;
+    const file = bucket.file(filename);
+
+    await file.save(req.file.buffer, {
+      metadata: { contentType: req.file.mimetype },
+    });
+    
+    try {
+      await file.makePublic();
+    } catch (e) {
+      // Ignore if bucket doesn't support makePublic
+    }
+
+    const logoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+    
     const vendorSnap = await db.collection('vendors').where('userId', '==', req.user.id).limit(1).get();
     if (vendorSnap.empty) return res.status(404).json({ error: 'Vendor not found' });
     await vendorSnap.docs[0].ref.update({ logoUrl, updatedAt: new Date().toISOString() });

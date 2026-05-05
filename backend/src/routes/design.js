@@ -9,25 +9,11 @@ const NodeStl = require('node-stl');
 
 const router = express.Router();
 
-// Define local upload directory (relative to backend root)
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    // Generate unique filename to prevent collisions
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname.replace(/[^a-zA-Z0-9.]/g, '_'));
-  }
-});
+const os = require('os');
+const { storage } = require('../lib/firebase');
 
 const upload = multer({
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
   fileFilter: (req, file, cb) => {
     const allowed = ['.stl', '.obj'];
@@ -48,16 +34,31 @@ router.post('/upload', auth, requireRole('CUSTOMER'), upload.single('file'), asy
 
   try {
     const fileExt = path.extname(req.file.originalname).toLowerCase();
-    
-    // The public URL assumes your backend is serving the /uploads folder statically
-    // e.g., app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-    const publicUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/uploads/${req.file.filename}`;
+    const bucket = storage.bucket();
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const filename = `designs/design-${uniqueSuffix}${fileExt}`;
+    const file = bucket.file(filename);
 
-    // Parse geometry mathematically with node-stl
+    await file.save(req.file.buffer, {
+      metadata: { contentType: req.file.mimetype || 'application/octet-stream' },
+    });
+
+    try {
+      await file.makePublic();
+    } catch (e) {
+      // Ignore if bucket doesn't support makePublic
+    }
+
+    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+
+    // Parse geometry mathematically with node-stl using a temporary file
     let volumeCm3 = 0, areaCm2 = 0, boundingBoxCm = { length: 0, width: 0, height: 0 };
     if (fileExt === '.stl' || fileExt === '.obj') {
+      let tmpPath;
       try {
-        const stl = new NodeStl(req.file.path, { density: 1.0 });
+        tmpPath = path.join(os.tmpdir(), uuidv4() + fileExt);
+        fs.writeFileSync(tmpPath, req.file.buffer);
+        const stl = new NodeStl(tmpPath, { density: 1.0 });
         
         // node-stl divides its calculated volume by 1000 natively. We reverse it to get original raw cubic units.
         const rawVolume = stl.volume * 1000; 
@@ -93,6 +94,10 @@ router.post('/upload', auth, requireRole('CUSTOMER'), upload.single('file'), asy
         };
       } catch (parseErr) {
         console.error('Failed to parse STL geometry:', parseErr);
+      } finally {
+        if (tmpPath && fs.existsSync(tmpPath)) {
+          fs.unlinkSync(tmpPath);
+        }
       }
     }
 
@@ -117,8 +122,6 @@ router.post('/upload', auth, requireRole('CUSTOMER'), upload.single('file'), asy
     res.status(201).json(designData);
   } catch (err) {
     console.error('Upload error:', err);
-    // Attempt to clean up the uploaded file if an error occurred after saving
-    try { if (req.file?.path) fs.unlinkSync(req.file.path); } catch {}
     res.status(500).json({ error: err.message || 'Upload failed' });
   }
 });
@@ -147,18 +150,20 @@ router.delete('/my-files/:id', auth, requireRole('CUSTOMER'), async (req, res) =
       return res.status(404).json({ error: 'Design not found' });
     }
 
-    // Try to remove the file from disk
     const data = doc.data();
-    if (data.fileUrl) {
-      // Assuming fileUrl looks like /uploads/filename.stl
-      const filename = data.fileUrl.split('/').pop();
-      const localPath = path.join(__dirname, '../../uploads', filename);
+    if (data.fileUrl && data.fileUrl.includes('firebasestorage.googleapis.com')) {
       try {
-        if (fs.existsSync(localPath)) {
-          fs.unlinkSync(localPath);
+        const bucket = storage.bucket();
+        // Extract filename from URL: .../o/designs%2Fdesign-123.stl?alt=media
+        const urlParts = new URL(data.fileUrl);
+        const pathPart = urlParts.pathname.split('/o/')[1];
+        if (pathPart) {
+          const filePath = decodeURIComponent(pathPart);
+          const file = bucket.file(filePath);
+          await file.delete();
         }
       } catch (err) {
-        console.error('Failed to unlink file on delete:', err);
+        console.error('Failed to delete file from Firebase Storage:', err);
       }
     }
 
