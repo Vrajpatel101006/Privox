@@ -16,6 +16,7 @@ const navItems = [
   { href: '/dashboard/vendor/disputes', icon: <Scale className="w-5 h-5" />, label: 'Refunds & Disputes', notifKey: 'disputes' },
   { href: '/dashboard/vendor/earnings', icon: <DollarSign className="w-5 h-5" />, label: 'Earnings & Payouts', notifKey: null },
   { href: '/dashboard/vendor/profile', icon: <User className="w-5 h-5" />, label: 'Profile', notifKey: null },
+  { href: '/marketplace', icon: <Store className="w-5 h-5" />, label: 'View Marketplace', notifKey: null },
 ];
 
 export default function VendorDashboardLayout({ children }: { children: React.ReactNode }) {

@@ -33,8 +33,8 @@ function MarketplaceContent() {
       const data: any = await productApi.list(Object.keys(params).length ? params : undefined);
       setProducts(data.products || []);
       
-      // Fetch user's cart to sync quantities
-      if (user) {
+      // Fetch user's cart to sync quantities — only if user is a CUSTOMER
+      if (user && user.role === 'CUSTOMER') {
         const cartData: any = await cartApi.get();
         const itemsMap: Record<string, number> = {};
         cartData?.items?.forEach((i: any) => {
