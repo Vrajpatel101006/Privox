@@ -288,4 +288,46 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+const { supabase } = require('../lib/supabase');
+
+// DELETE /products/:id — Remove a product from inventory
+router.delete('/:id', auth, requireRole('VENDOR'), async (req, res) => {
+  try {
+    const vendorSnap = await db.collection('vendors').where('userId', '==', req.user.id).limit(1).get();
+    if (vendorSnap.empty) return res.status(404).json({ error: 'Vendor not found' });
+    const vendorId = vendorSnap.docs[0].id;
+
+    const productRef = db.collection('products').doc(req.params.id);
+    const productDoc = await productRef.get();
+    
+    if (!productDoc.exists) return res.status(404).json({ error: 'Product not found' });
+    const product = productDoc.data();
+    
+    if (product.vendorId !== vendorId) {
+      return res.status(403).json({ error: 'Not authorized to delete this product' });
+    }
+
+    // Optional: Delete image from Supabase Storage
+    if (product.imageUrl && product.imageUrl.includes('supabase.co')) {
+      try {
+        const urlParts = new URL(product.imageUrl);
+        const pathPart = urlParts.pathname.split('/public/uploads/')[1];
+        if (pathPart) {
+          const filePath = decodeURIComponent(pathPart);
+          await supabase.storage.from('uploads').remove([filePath]);
+          console.log(`✅ Deleted product image from storage: ${filePath}`);
+        }
+      } catch (storageErr) {
+        console.error('Failed to delete product image from Supabase:', storageErr);
+      }
+    }
+
+    await productRef.delete();
+    res.json({ success: true, message: 'Product removed from inventory' });
+  } catch (err) {
+    console.error('Delete product error:', err);
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
 module.exports = router;

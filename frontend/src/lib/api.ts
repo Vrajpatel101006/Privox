@@ -140,6 +140,7 @@ export const productApi = {
   get: (id: string) => request(`/products/${id}`),
   update: (id: string, body: object) => request(`/products/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   restock: (id: string, quantity: number) => request(`/products/${id}/restock`, { method: 'PATCH', body: JSON.stringify({ quantity }) }),
+  delete: (id: string) => request(`/products/${id}`, { method: 'DELETE' }),
   vendorInventory: () => request('/products/vendor/inventory'),
 };
 

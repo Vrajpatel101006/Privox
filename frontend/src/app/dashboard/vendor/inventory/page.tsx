@@ -97,6 +97,20 @@ export default function VendorInventoryPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleDelete = async (productId: string) => {
+    if (!window.confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
+    setSubmitting(true);
+    setError('');
+    try {
+      await productApi.delete(productId);
+      setProducts(prev => prev.filter(p => p.id !== productId));
+    } catch (err: any) {
+      setError(err.message || 'Delete failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 spinner" /></div>;
 
   return (
@@ -225,12 +239,21 @@ export default function VendorInventoryPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-1.5 shrink-0">
-                  <button
-                    onClick={() => handleEdit(p)}
-                    className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-slate-300 transition-colors"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex gap-1.5">
+                    <button
+                      onClick={() => handleEdit(p)}
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-slate-300 transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(p.id)}
+                      className="px-2 py-1.5 rounded-lg bg-red-900/30 hover:bg-red-900/50 border border-red-500/20 text-xs text-red-400 transition-colors"
+                      title="Delete Product"
+                    >
+                      🗑️
+                    </button>
+                  </div>
                   <button
                     onClick={() => { setRestockingId(restockingId === p.id ? null : p.id); setRestockQty(''); }}
                     className="px-3 py-1.5 rounded-lg bg-emerald-900/30 hover:bg-emerald-900/50 border border-emerald-500/20 text-xs text-emerald-400 transition-colors"
@@ -239,6 +262,46 @@ export default function VendorInventoryPage() {
                   </button>
                 </div>
               </div>
+
+              {/* Inline Restock Panel */}
+              {restockingId === p.id && (
+                <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-2">
+                  <span className="text-xs text-slate-400 shrink-0">Add stock:</span>
+                  <input
+                    type="number"
+                    min="1"
+                    value={restockQty}
+                    onChange={e => setRestockQty(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleRestock(p.id)}
+                    placeholder="e.g. 50"
+                    autoFocus
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm"
+                  />
+                  <span className="text-xs text-slate-500 shrink-0">
+                    {p.stock} + {parseInt(restockQty) > 0 ? parseInt(restockQty) : '?'} = <span className="text-white font-semibold">{parseInt(restockQty) > 0 ? p.stock + parseInt(restockQty) : '?'}</span>
+                  </span>
+                  <button
+                    onClick={() => handleRestock(p.id)}
+                    disabled={submitting}
+                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-xs text-white font-medium transition-colors shrink-0"
+                  >
+                    {submitting ? '...' : 'Confirm'}
+                  </button>
+                  <button
+                    onClick={() => { setRestockingId(null); setRestockQty(''); }}
+                    className="text-xs text-slate-500 hover:text-slate-300"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
               {/* Inline Restock Panel */}
               {restockingId === p.id && (
