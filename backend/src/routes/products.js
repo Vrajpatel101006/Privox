@@ -1,7 +1,8 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { auth, requireRole } = require('../middleware/auth');
-const { db, storage } = require('../lib/firebase');
+const { db } = require('../lib/firebase');
+const { uploadToSupabase } = require('../lib/supabase');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
@@ -25,23 +26,11 @@ const upload = multer({
 router.post('/upload-image', auth, requireRole('VENDOR'), upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No payload detected.' });
   try {
-    const bucket = storage.bucket();
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const filename = `products/product-${uniqueSuffix}${path.extname(req.file.originalname).toLowerCase()}`;
-    const file = bucket.file(filename);
-
-    await file.save(req.file.buffer, {
-      metadata: { contentType: req.file.mimetype },
-    });
     
-    try {
-      await file.makePublic();
-    } catch (e) {
-      // Ignore if bucket doesn't support makePublic
-    }
-
-    // Use Firebase Storage public URL format
-    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+    const publicUrl = await uploadToSupabase('uploads', filename, req.file.buffer, req.file.mimetype);
+    
     res.json({ imageUrl: publicUrl });
   } catch (err) {
     console.error('Upload error:', err);

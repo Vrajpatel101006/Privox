@@ -2,15 +2,14 @@ const express = require('express');
 const multer = require('multer');
 const { auth, requireRole } = require('../middleware/auth');
 const { db } = require('../lib/firebase');
+const { supabase, uploadToSupabase } = require('../lib/supabase');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const NodeStl = require('node-stl');
+const os = require('os');
 
 const router = express.Router();
-
-const os = require('os');
-const { storage } = require('../lib/firebase');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -34,22 +33,10 @@ router.post('/upload', auth, requireRole('CUSTOMER'), upload.single('file'), asy
 
   try {
     const fileExt = path.extname(req.file.originalname).toLowerCase();
-    const bucket = storage.bucket();
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const filename = `designs/design-${uniqueSuffix}${fileExt}`;
-    const file = bucket.file(filename);
-
-    await file.save(req.file.buffer, {
-      metadata: { contentType: req.file.mimetype || 'application/octet-stream' },
-    });
-
-    try {
-      await file.makePublic();
-    } catch (e) {
-      // Ignore if bucket doesn't support makePublic
-    }
-
-    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+    
+    const publicUrl = await uploadToSupabase('uploads', filename, req.file.buffer, req.file.mimetype || 'application/octet-stream');
 
     // Parse geometry mathematically with node-stl using a temporary file
     let volumeCm3 = 0, areaCm2 = 0, boundingBoxCm = { length: 0, width: 0, height: 0 };
@@ -151,19 +138,17 @@ router.delete('/my-files/:id', auth, requireRole('CUSTOMER'), async (req, res) =
     }
 
     const data = doc.data();
-    if (data.fileUrl && data.fileUrl.includes('firebasestorage.googleapis.com')) {
+    if (data.fileUrl && data.fileUrl.includes('supabase.co')) {
       try {
-        const bucket = storage.bucket();
-        // Extract filename from URL: .../o/designs%2Fdesign-123.stl?alt=media
+        // Extract filename from URL: .../storage/v1/object/public/uploads/designs/design-123.stl
         const urlParts = new URL(data.fileUrl);
-        const pathPart = urlParts.pathname.split('/o/')[1];
+        const pathPart = urlParts.pathname.split('/public/uploads/')[1];
         if (pathPart) {
           const filePath = decodeURIComponent(pathPart);
-          const file = bucket.file(filePath);
-          await file.delete();
+          await supabase.storage.from('uploads').remove([filePath]);
         }
       } catch (err) {
-        console.error('Failed to delete file from Firebase Storage:', err);
+        console.error('Failed to delete file from Supabase Storage:', err);
       }
     }
 

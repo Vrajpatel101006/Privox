@@ -178,7 +178,7 @@ router.post('/:id/rate', auth, requireRole('CUSTOMER'), async (req, res) => {
 // POST /vendors/upload-logo — Upload vendor company logo/photo
 const multer = require('multer');
 const path = require('path');
-const { storage } = require('../lib/firebase');
+const { uploadToSupabase } = require('../lib/supabase');
 
 const logoUpload = multer({
   storage: multer.memoryStorage(),
@@ -193,22 +193,10 @@ const logoUpload = multer({
 router.post('/upload-logo', auth, requireRole('VENDOR'), logoUpload.single('logo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const bucket = storage.bucket();
     const ext = path.extname(req.file.originalname).toLowerCase();
     const filename = `vendors/logo-${req.user?.id || Date.now()}-${Date.now()}${ext}`;
-    const file = bucket.file(filename);
-
-    await file.save(req.file.buffer, {
-      metadata: { contentType: req.file.mimetype },
-    });
     
-    try {
-      await file.makePublic();
-    } catch (e) {
-      // Ignore if bucket doesn't support makePublic
-    }
-
-    const logoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+    const logoUrl = await uploadToSupabase('uploads', filename, req.file.buffer, req.file.mimetype);
     
     const vendorSnap = await db.collection('vendors').where('userId', '==', req.user.id).limit(1).get();
     if (vendorSnap.empty) return res.status(404).json({ error: 'Vendor not found' });

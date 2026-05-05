@@ -295,7 +295,7 @@ router.put('/profile', require('../middleware/auth').auth, async (req, res) => {
 // POST /auth/upload-avatar — Upload user profile photo
 const multer = require('multer');
 const path = require('path');
-const { storage } = require('../lib/firebase');
+const { uploadToSupabase } = require('../lib/supabase');
 
 const avatarUpload = multer({
   storage: multer.memoryStorage(),
@@ -310,22 +310,10 @@ const avatarUpload = multer({
 router.post('/upload-avatar', require('../middleware/auth').auth, avatarUpload.single('avatar'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const bucket = storage.bucket();
     const ext = path.extname(req.file.originalname).toLowerCase();
     const filename = `avatars/avatar-${req.user?.id || Date.now()}-${Date.now()}${ext}`;
-    const file = bucket.file(filename);
-
-    await file.save(req.file.buffer, {
-      metadata: { contentType: req.file.mimetype },
-    });
     
-    try {
-      await file.makePublic();
-    } catch (e) {
-      // Ignore if bucket doesn't support makePublic
-    }
-
-    const avatarUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
+    const avatarUrl = await uploadToSupabase('uploads', filename, req.file.buffer, req.file.mimetype);
     
     await db.collection('users').doc(req.user.id).update({ avatarUrl, updatedAt: new Date().toISOString() });
     res.json({ avatarUrl });

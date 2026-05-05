@@ -12,7 +12,7 @@ const router = express.Router();
 // ──────────────────────────────────────────────────────────────
 // Video/Photo Upload Setup
 // ──────────────────────────────────────────────────────────────
-const { storage } = require('../lib/firebase');
+const { uploadToSupabase } = require('../lib/supabase');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -192,26 +192,8 @@ router.post('/request',
   }
 );
 
-// Helper to upload a file buffer to Firebase Storage
-async function uploadToFirebase(fileBuffer, mimetype, originalName) {
-  const bucket = storage.bucket();
-  const ext = path.extname(originalName).toLowerCase();
-  const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-  const filename = `refunds/refund-${suffix}${ext}`;
-  const file = bucket.file(filename);
-
-  await file.save(fileBuffer, {
-    metadata: { contentType: mimetype || 'application/octet-stream' },
-  });
-
-  try {
-    await file.makePublic();
-  } catch (e) {
-    // Ignore if uniform bucket access prevents makePublic
-  }
-
-  return `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media`;
-}
+// ──────────────────────────────────────────────────────────────
+// Helper removed. Using uploadToSupabase directly.
 
 // ──────────────────────────────────────────────────────────────
 // POST /refunds/:id/upload-proof — Upload photo/video proof (customer)
@@ -233,17 +215,23 @@ router.post('/:id/upload-proof', auth, requireRole('CUSTOMER'),
       const updates = { updatedAt: new Date().toISOString() };
       
       if (req.files?.photo?.[0]) {
-        updates.customerPhotoUrl = await uploadToFirebase(
+        const ext = path.extname(req.files.photo[0].originalname).toLowerCase();
+        const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        updates.customerPhotoUrl = await uploadToSupabase(
+          'uploads', 
+          `refunds/refund-${suffix}${ext}`, 
           req.files.photo[0].buffer, 
-          req.files.photo[0].mimetype, 
-          req.files.photo[0].originalname
+          req.files.photo[0].mimetype
         );
       }
       if (req.files?.video?.[0]) {
-        updates.customerVideoUrl = await uploadToFirebase(
+        const ext = path.extname(req.files.video[0].originalname).toLowerCase();
+        const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        updates.customerVideoUrl = await uploadToSupabase(
+          'uploads', 
+          `refunds/refund-${suffix}${ext}`, 
           req.files.video[0].buffer, 
-          req.files.video[0].mimetype, 
-          req.files.video[0].originalname
+          req.files.video[0].mimetype
         );
       }
 
@@ -343,17 +331,23 @@ router.post('/:id/vendor-upload-proof', auth, requireRole('VENDOR'),
       const updates = { updatedAt: new Date().toISOString() };
       
       if (req.files.video?.[0]) {
-        updates.vendorPackingVideoUrl = await uploadToFirebase(
+        const ext = path.extname(req.files.video[0].originalname).toLowerCase();
+        const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        updates.vendorPackingVideoUrl = await uploadToSupabase(
+          'uploads', 
+          `refunds/refund-${suffix}${ext}`, 
           req.files.video[0].buffer, 
-          req.files.video[0].mimetype, 
-          req.files.video[0].originalname
+          req.files.video[0].mimetype
         );
       }
       if (req.files.photo?.[0]) {
-        updates.vendorDisputePhotoUrl = await uploadToFirebase(
+        const ext = path.extname(req.files.photo[0].originalname).toLowerCase();
+        const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        updates.vendorDisputePhotoUrl = await uploadToSupabase(
+          'uploads', 
+          `refunds/refund-${suffix}${ext}`, 
           req.files.photo[0].buffer, 
-          req.files.photo[0].mimetype, 
-          req.files.photo[0].originalname
+          req.files.photo[0].mimetype
         );
       }
 
